@@ -1,4 +1,4 @@
-package com.example.appmusicplayer.view.playersong
+package com.example.appmusicplayer.view.playerSong
 
 import android.graphics.Color
 import android.media.MediaPlayer
@@ -20,7 +20,7 @@ class PlayerSongActivity : AppCompatActivity() {
     private var isRandow: Boolean = false
     private lateinit var musicList: ArrayList<MusicEntity>
     private var currentIndex = 0
-    private lateinit var handler: Handler
+    private var handler: Handler? = null
     private lateinit var runnable: Runnable
 
 
@@ -152,12 +152,12 @@ class PlayerSongActivity : AppCompatActivity() {
                     val current = it.currentPosition
                     binding.seekbarMusic.progress = it.currentPosition
                     binding.txtTimeCurrent.text = formatTime(current)
-                    handler.postDelayed(this, 500) // cập nhật mỗi 0.5s
+                    handler?.postDelayed(this, 500) // cập nhật mỗi 0.5s
                 }
             }
         }
 
-        handler.post(runnable)
+        handler?.post(runnable)
     }
 
     //hiển thị thời gian

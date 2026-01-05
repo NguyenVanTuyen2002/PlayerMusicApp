@@ -13,6 +13,16 @@
         android:src="@drawable/title_app"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    
+    <ImageView
+        android:id="@+id/btnSearch"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/search"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imgTitleApp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgTitleApp"/>
 
     <LinearLayout
         android:id="@+id/framePlayMusic"

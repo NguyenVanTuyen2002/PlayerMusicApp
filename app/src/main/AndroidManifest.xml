@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>
+
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32"/>
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -21,7 +26,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.home.HomeActivity"/>
-        <activity android:name=".view.playersong.PlayerSongActivity"/>
+        <activity android:name=".view.playerSong.PlayerSongActivity"/>
+        <activity android:name=".view.search.SearchActivity"/>
     </application>
 
 </manifest>

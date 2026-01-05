@@ -5,7 +5,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.appmusicplayer.databinding.ActivityHomeBinding
 import com.example.appmusicplayer.model.MusicEntity
-import com.example.appmusicplayer.view.playersong.PlayerSongActivity
+import com.example.appmusicplayer.view.playerSong.PlayerSongActivity
+import com.example.appmusicplayer.view.search.SearchActivity
 import com.example.appmusicplayer.viewmodel.HomeViewModel
 
 class HomeActivity : AppCompatActivity(), onClickMusicListener {
@@ -24,7 +25,12 @@ class HomeActivity : AppCompatActivity(), onClickMusicListener {
 
         viewModel = HomeViewModel()
         viewModel.data = data
-        viewModel.loadData()
+        //viewModel.loadData()
+
+        binding.btnSearch.setOnClickListener {
+            val intent = Intent(this, SearchActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     override fun onMusicListener(music: MusicEntity) {
