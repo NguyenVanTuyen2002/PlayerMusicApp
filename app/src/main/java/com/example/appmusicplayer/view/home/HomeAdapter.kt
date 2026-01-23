@@ -1,15 +1,23 @@
 package com.example.appmusicplayer.view.home
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.appmusicplayer.databinding.ItemMusicRecycleViewBinding
-import com.example.appmusicplayer.model.MusicEntity
+import com.example.appmusicplayer.model.Music
 
 class HomeAdapter(
-    var data: ArrayList<MusicEntity>,
+    var data: ArrayList<Music>,
     var listener: onClickMusicListener
 ) : RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
+    fun updateData(newData: ArrayList<Music>) {
+        Log.d("Tuyen", "Adapter nhận ${newData.size} bài hát")
+        data.clear()
+        data.addAll(newData)
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -31,11 +39,16 @@ class HomeAdapter(
     inner class ViewHolder(
         private val binding: ItemMusicRecycleViewBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bindView(data: MusicEntity) {
-            binding.txtMusicName.text = data.name
+        fun bindView(data: Music) {
+            binding.txtMusicName.text = data.title
 
-            binding.root.setOnClickListener {
+            binding.itemMusic
+                .setOnClickListener {
                 listener.onMusicListener(data)
+            }
+
+            binding.btnDetailMusic.setOnClickListener {
+                listener.onDetailMusic(data)
             }
         }
     }

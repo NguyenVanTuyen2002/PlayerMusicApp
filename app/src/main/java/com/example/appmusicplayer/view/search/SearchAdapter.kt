@@ -1,12 +1,21 @@
 package com.example.appmusicplayer.view.search
 
+import android.R.attr.data
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.example.appmusicplayer.databinding.ItemMusicRecycleViewBinding
+import com.example.appmusicplayer.model.Music
 
-class SearchAdapter : RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
+class SearchAdapter(var data: ArrayList<Music>, val search: onClickMusicSearch) : RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
+
+    fun updateData(newdata: List<Music>) {
+        data.clear()
+        data.addAll(newdata)
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -20,16 +29,18 @@ class SearchAdapter : RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
         holder: ViewHolder,
         position: Int
     ) {
-        TODO("Not yet implemented")
+        holder.binView(data[position])
     }
 
-    override fun getItemCount(): Int {
-        TODO("Not yet implemented")
-    }
+    override fun getItemCount(): Int = data.size
 
     inner class ViewHolder (private val binding: ItemMusicRecycleViewBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun binView() {
+        fun binView(data: Music) {
+            binding.txtMusicName.text = data.title
 
+            binding.itemMusic.setOnClickListener {
+                search.onClickMusic(data)
+            }
         }
     }
 }

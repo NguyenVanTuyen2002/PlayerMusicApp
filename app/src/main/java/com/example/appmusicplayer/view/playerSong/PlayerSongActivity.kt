@@ -8,17 +8,18 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.appmusicplayer.R
 import com.example.appmusicplayer.databinding.ActivityPlayerSongBinding
-import com.example.appmusicplayer.model.MusicEntity
+import com.example.appmusicplayer.model.Music
 import android.os.Handler
 import android.widget.SeekBar
+import com.google.gson.Gson
 
 
 class PlayerSongActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlayerSongBinding
     private var mediaPlayer: MediaPlayer? = null
     private var isPause: Boolean = true
-    private var isRandow: Boolean = false
-    private lateinit var musicList: ArrayList<MusicEntity>
+    private var isRandom: Boolean = false
+    private lateinit var musicList: ArrayList<Music>
     private var currentIndex = 0
     private var handler: Handler? = null
     private lateinit var runnable: Runnable
@@ -29,58 +30,46 @@ class PlayerSongActivity : AppCompatActivity() {
         binding = ActivityPlayerSongBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.btnBack.setOnClickListener {
-            finish()
-            mediaPlayer?.pause()
-        }
+        backView()
 
-        musicList = intent.getParcelableArrayListExtra("music_list")!!
+        //nhận data từ home
+        val musicJson = intent.getStringExtra("music_list_json")
         currentIndex = intent.getIntExtra("music_index", 0)
-        binding.txtSongName.text = musicList[currentIndex].name
+        val gson = Gson()
+        val type = object : com.google.gson.reflect.TypeToken<ArrayList<Music>>() {}.type
+        musicList = gson.fromJson(musicJson, type)
 
-        mediaPlayer = MediaPlayer.create(this, musicList[currentIndex].music)
-
-        binding.seekbarMusic.max = mediaPlayer!!.duration
-
-        //tắt bật music
-        binding.btnPlayMusic.setOnClickListener {
-            isPause = !isPause
-            if (isPause) {
-                mediaPlayer?.pause()
-                binding.btnPlayMusic.setImageResource(R.drawable.frame_1000005827)
-            } else {
-                mediaPlayer?.start()
-                startSeekBar()
-                binding.btnPlayMusic.setImageResource(R.drawable.on)
-            }
-        }
-
-        //bật bài hát hiện tại
+        //PHÁT BÀI Đc CLICK
         playMusic(currentIndex)
 
-        //bật bài tiếp theo
-        binding.btnNextMusic.setOnClickListener {
-            val next = currentIndex + 1
-            if (next < musicList.size) {
-                currentIndex = next
-            } else {
-                currentIndex = 0
-            }
-            playMusic(currentIndex)
-            Log.d("Tuyen", currentIndex.toString())
-        }
+        setupControls()
 
-        //bật bài trc đó
-        binding.btnBackMusic.setOnClickListener {
-            val back = currentIndex - 1
-            if (back > -1) {
-                currentIndex = back
-            } else {
-                currentIndex = musicList.size - 1
-            }
-            playMusic(currentIndex)
-        }
+        changeRandom()
 
+        touchSeekbar()
+    }
+
+    fun backView() {
+        binding.btnBack.setOnClickListener {
+            mediaPlayer?.release()
+            mediaPlayer = null
+            finish()
+        }
+    }
+
+    fun changeRandom() {
+        //đổi màu nút random
+        binding.btnPlayRandom.setOnClickListener {
+            isRandom = !isRandom
+            if (isRandom) {
+                binding.btnPlayRandom.setColorFilter(getColor(R.color.green))
+            } else {
+                binding.btnPlayRandom.setColorFilter(Color.TRANSPARENT)
+            }
+        }
+    }
+
+    fun touchSeekbar() {
         //kéo seekbar để tua
         binding.seekbarMusic.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
 
@@ -94,47 +83,33 @@ class PlayerSongActivity : AppCompatActivity() {
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
-
-        binding.btnPlayRandom.setOnClickListener {
-            isRandow = !isRandow
-            if (isRandow) {
-                binding.btnPlayRandom.setColorFilter(getColor(R.color.green))
-            } else {
-                binding.btnPlayRandom.setColorFilter(Color.TRANSPARENT)
-            }
-        }
     }
 
     private fun playMusic(index: Int) {
         mediaPlayer?.release()
 
         val music = musicList[index]
-        binding.txtSongName.text = music.name
+        binding.txtSongName.text = music.title
 
-        mediaPlayer = MediaPlayer.create(this, music.music)
-        mediaPlayer?.start()
+        mediaPlayer = MediaPlayer().apply {
+            setDataSource(music.path)
+            prepare()
+            start()
+        }
 
         binding.seekbarMusic.max = mediaPlayer!!.duration
         binding.txtTimeTotal.text = formatTime(mediaPlayer!!.duration)
         binding.txtTimeCurrent.text = "00:00"
+
         startSeekBar()
 
         mediaPlayer?.setOnCompletionListener {
 
-            if (isRandow) {
-                var nextIndex: Int
-                do {
-                    nextIndex = (0 until musicList.size).random()
-                } while (nextIndex == currentIndex)
-
-                currentIndex = nextIndex
+            currentIndex = if (isRandom) {
+                (musicList.indices).random()
             } else {
-                currentIndex++
-                if (currentIndex > musicList.size - 1) {
-                    currentIndex = 0
-                }
+                (currentIndex + 1) % musicList.size
             }
-
             playMusic(currentIndex)
         }
 
@@ -165,5 +140,37 @@ class PlayerSongActivity : AppCompatActivity() {
         val minutes = ms / 1000 / 60
         val seconds = (ms / 1000) % 60
         return String.format("%02d:%02d", minutes, seconds)
+    }
+
+    private fun setupControls() {
+        binding.btnPlayMusic.setOnClickListener {
+            isPause = !isPause
+            if (isPause) {
+                mediaPlayer?.pause()
+                binding.btnPlayMusic.setImageResource(R.drawable.frame_1000005827)
+            } else {
+                mediaPlayer?.start()
+                startSeekBar()
+                binding.btnPlayMusic.setImageResource(R.drawable.on)
+            }
+        }
+
+        binding.btnNextMusic.setOnClickListener {
+            currentIndex = (currentIndex + 1) % musicList.size
+            playMusic(currentIndex)
+        }
+
+        binding.btnBackMusic.setOnClickListener {
+            currentIndex =
+                if (currentIndex - 1 < 0) musicList.size - 1 else currentIndex - 1
+            playMusic(currentIndex)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler?.removeCallbacks(runnable)
+        mediaPlayer?.release()
+        mediaPlayer = null
     }
 }

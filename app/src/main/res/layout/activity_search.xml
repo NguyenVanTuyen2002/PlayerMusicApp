@@ -20,6 +20,7 @@
         android:layout_width="280dp"
         android:layout_height="48dp"
         android:hint="Search"
+        android:layout_marginStart="30dp"
         android:textColorHint="@color/white"
         android:textColor="@color/white"
         android:background="@color/dark_gray"
@@ -31,9 +32,10 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listMusic"
-        android:layout_width="380dp"
+        android:layout_width="match_parent"
         android:layout_height="660dp"
         android:layout_marginTop="16dp"
+        android:padding="8dp"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"

@@ -4,8 +4,8 @@ import android.content.Context
 import android.provider.MediaStore
 
 class MusicRepository(private val context: Context) {
-    fun getAllMusic(): List<MusicEntity> {
-        val list = mutableListOf<MusicEntity>()
+    fun getAllMusic(): List<Music> {
+        val list = mutableListOf<Music>()
 
         val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
         val projection = arrayOf(
@@ -16,7 +16,8 @@ class MusicRepository(private val context: Context) {
             MediaStore.Audio.Media.DURATION
         )
 
-        val selection = "${MediaStore.Audio.Media.IS_MUSIC} != 0"
+        val selection =
+            "${MediaStore.Audio.Media.IS_MUSIC} != 0 AND ${MediaStore.Audio.Media.DURATION} > 1000"
 
         context.contentResolver.query(
             uri,
@@ -27,7 +28,7 @@ class MusicRepository(private val context: Context) {
         )?.use { cursor ->
             while (cursor.moveToNext()) {
                 list.add(
-                    MusicEntity(
+                    Music(
                         id = cursor.getLong(0),
                         title = cursor.getString(1),
                         artist = cursor.getString(2),

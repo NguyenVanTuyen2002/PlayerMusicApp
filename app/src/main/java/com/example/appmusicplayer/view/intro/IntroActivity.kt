@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.appmusicplayer.model.Intro
 import com.example.appmusicplayer.databinding.ActivityIntroBinding
-import com.example.appmusicplayer.view.home.HomeActivity
+import com.example.appmusicplayer.view.MainActivity
 import com.example.appmusicplayer.viewmodel.IntroViewModel
 
 class IntroActivity: AppCompatActivity(), onClickNextListener {
@@ -32,7 +32,7 @@ class IntroActivity: AppCompatActivity(), onClickNextListener {
         if (next < data.size) {
             binding.viewPagerIntro.setCurrentItem(next, true)
         }else {
-            val intent = Intent(this, HomeActivity::class.java)
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
     }
