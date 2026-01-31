@@ -124,7 +124,8 @@ class HomeFragment : Fragment(), onClickMusicListener {
     }
 
     override fun onDetailMusic(music: Music) {
-        val menuItem = MenuItemMusic(requireContext(), music)
+        val menuItem = MenuItemMusic(requireActivity()
+            , music)
         menuItem.show()
     }
 }

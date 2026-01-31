@@ -8,6 +8,7 @@ import com.example.appmusicplayer.model.MusicRepository
 
 class SearchViewModel : ViewModel() {
     private lateinit var repository: MusicRepository
+
     private val _musicList = MutableLiveData<List<Music>>()
     val musicList: LiveData<List<Music>> = _musicList
 

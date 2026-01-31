@@ -26,6 +26,7 @@
         <activity android:name=".view.MainActivity"/>
         <activity android:name=".view.playerSong.PlayerSongActivity"/>
         <activity android:name=".view.search.SearchActivity"/>
+        <activity android:name=".view.playlistFolder.PlaylistFolderActivity"/>
     </application>
 
 </manifest>

@@ -9,12 +9,18 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.appmusicplayer.R
 import com.example.appmusicplayer.databinding.FragmentPlaylistBinding
+import com.example.appmusicplayer.model.PlaylistEntity
+import com.example.appmusicplayer.view.playlistFolder.PlaylistFolderActivity
 import com.example.appmusicplayer.view.search.SearchActivity
+import com.example.appmusicplayer.viewmodel.PlaylistViewModel
 
-class PlaylistFragment : Fragment() {
-    private var binding: FragmentPlaylistBinding ?= null
+class PlaylistFragment : Fragment(), onPlaylistClick {
+    private var binding: FragmentPlaylistBinding? = null
+    private lateinit var adapter: PlaylistAdapter
+    private lateinit var viewModel: PlaylistViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,35 +39,53 @@ class PlaylistFragment : Fragment() {
             startActivity(intent)
         }
 
-        createPlaylist()
+        adapter = PlaylistAdapter(mutableListOf(), this)
+        binding?.rvPlaylist?.adapter = adapter
+
+        viewModel = ViewModelProvider(this)[PlaylistViewModel::class.java]
+        viewModel.init(requireContext())
+
+        observeData()
+
     }
 
-    fun createPlaylist() {
-        binding?.btnCratePlaylist?.setOnClickListener {
-            val dialogView = layoutInflater.inflate(R.layout.dialog_create_playlist, null)
+    fun observeData() {
+        viewModel.playlistList.observe(viewLifecycleOwner) {
+            adapter.updateData(it)
+        }
+    }
 
-            val edtName = dialogView.findViewById<EditText>(R.id.edtCreatePlaylist)
-            val btnCancel = dialogView.findViewById<TextView>(R.id.btn_cancel)
-            val btnSave = dialogView.findViewById<TextView>(R.id.btn_save)
+    override fun onCreatePlaylist() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_create_playlist, null)
 
-            val dialog = AlertDialog.Builder(requireContext())
-                .setView(dialogView)
-                .setCancelable(false)
-                .create()
+        val edtName = dialogView.findViewById<EditText>(R.id.edtCreatePlaylist)
+        val btnCancel = dialogView.findViewById<TextView>(R.id.btn_cancel)
+        val btnSave = dialogView.findViewById<TextView>(R.id.btn_save)
 
-            btnCancel.setOnClickListener {
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .setCancelable(false)
+            .create()
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        btnSave.setOnClickListener {
+            val name = edtName.text.toString()
+            if (name.isNotEmpty()) {
+                viewModel.createPlaylist(name)
                 dialog.dismiss()
             }
-
-            btnSave.setOnClickListener {
-                val name = edtName.text.toString()
-                if (name.isNotEmpty()) {
-                    // TODO: xử lý lưu playlist
-                    dialog.dismiss()
-                }
-            }
-
-            dialog.show()
         }
+
+        dialog.show()
+    }
+
+    override fun onClickPlaylist(playlist: PlaylistEntity) {
+        val intent = Intent(requireContext(), PlaylistFolderActivity::class.java)
+        intent.putExtra("playlist_id", playlist.id)
+        intent.putExtra("playlist_name", playlist.name)
+        startActivity(intent)
     }
 }

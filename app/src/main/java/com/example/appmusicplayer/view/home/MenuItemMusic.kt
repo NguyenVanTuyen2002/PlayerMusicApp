@@ -2,12 +2,13 @@ package com.example.appmusicplayer.view.home
 
 import android.content.Context
 import android.os.Bundle
+import androidx.fragment.app.FragmentActivity
 import com.example.appmusicplayer.databinding.MenuItemMusicBinding
 import com.example.appmusicplayer.model.Music
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
 
-class MenuItemMusic(context: Context,private val music: Music) : BottomSheetDialog(context) {
+class MenuItemMusic(private val activity: FragmentActivity,private val music: Music) : BottomSheetDialog(activity) {
     private lateinit var binding: MenuItemMusicBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,5 +19,12 @@ class MenuItemMusic(context: Context,private val music: Music) : BottomSheetDial
         window?.setDimAmount(0.8f)
 
         binding.txtMusicName.text = music.title
+
+        binding.btnAddPlaylist.setOnClickListener {
+            ListPlaylistMusic(
+                activity,
+                music
+            ).show()
+        }
     }
 }
