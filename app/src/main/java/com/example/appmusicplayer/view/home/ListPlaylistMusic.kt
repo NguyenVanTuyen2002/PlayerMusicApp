@@ -1,12 +1,10 @@
 package com.example.appmusicplayer.view.home
 
-import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.appmusicplayer.databinding.ListPlaylistMusicBinding
-import com.example.appmusicplayer.model.Music
-import com.example.appmusicplayer.model.PlaylistRepository
+import com.example.appmusicplayer.model.music.Music
 import com.example.appmusicplayer.viewmodel.ListPlaylistMusicViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -25,18 +23,17 @@ class ListPlaylistMusic(
 
         window?.setDimAmount(0.8f)
 
-        adapter = ListPlaylistMusicAdapter(arrayListOf()) { playlist ->
-            viewModel.addMusicToPlaylist(
-                playlist.id,
-                music.path
-            )
+        viewModel = ViewModelProvider(
+            activity,
+            ViewModelProvider.AndroidViewModelFactory.getInstance(activity.application)
+        )[ListPlaylistMusicViewModel::class.java]
+
+        adapter = ListPlaylistMusicAdapter(mutableListOf()) { playlist ->
+            viewModel.addMusicToPlaylist(playlist.id, music.path)
             dismiss()
         }
 
         binding.rvPlaylistMusic.adapter = adapter
-
-        viewModel = ViewModelProvider(activity)[ListPlaylistMusicViewModel::class.java]
-        viewModel.init(activity)
 
         observeData()
     }

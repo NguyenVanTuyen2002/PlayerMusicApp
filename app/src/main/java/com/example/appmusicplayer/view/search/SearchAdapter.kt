@@ -1,12 +1,10 @@
 package com.example.appmusicplayer.view.search
 
-import android.R.attr.data
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewbinding.ViewBinding
 import com.example.appmusicplayer.databinding.ItemMusicRecycleViewBinding
-import com.example.appmusicplayer.model.Music
+import com.example.appmusicplayer.model.music.Music
 
 class SearchAdapter(var data: ArrayList<Music>, val search: onClickMusicSearch) : RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
 

@@ -1,12 +1,10 @@
 package com.example.appmusicplayer.view.home
 
-import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import com.example.appmusicplayer.databinding.MenuItemMusicBinding
-import com.example.appmusicplayer.model.Music
+import com.example.appmusicplayer.model.music.Music
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.gson.Gson
 
 class MenuItemMusic(private val activity: FragmentActivity,private val music: Music) : BottomSheetDialog(activity) {
     private lateinit var binding: MenuItemMusicBinding

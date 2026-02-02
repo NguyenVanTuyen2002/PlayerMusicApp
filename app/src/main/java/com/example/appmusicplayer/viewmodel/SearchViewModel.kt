@@ -3,8 +3,8 @@ package com.example.appmusicplayer.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.appmusicplayer.model.Music
-import com.example.appmusicplayer.model.MusicRepository
+import com.example.appmusicplayer.model.music.Music
+import com.example.appmusicplayer.model.music.MusicRepository
 
 class SearchViewModel : ViewModel() {
     private lateinit var repository: MusicRepository

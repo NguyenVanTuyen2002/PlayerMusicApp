@@ -7,10 +7,8 @@ import com.example.appmusicplayer.databinding.ItemCreatePlaylistRvBinding
 import com.example.appmusicplayer.databinding.ItemFavouritePlaylistRvBinding
 import com.example.appmusicplayer.databinding.ItemHistoryPlaylistRvBinding
 import com.example.appmusicplayer.databinding.ItemPlaylistRecycleViewBinding
-import com.example.appmusicplayer.databinding.MenuItemMusicBinding
-import com.example.appmusicplayer.model.Music
-import com.example.appmusicplayer.model.PlaylistEntity
-import com.example.appmusicplayer.model.PlaylistItem
+import com.example.appmusicplayer.model.playlist.PlaylistEntity
+import com.example.appmusicplayer.model.playlist.PlaylistItem
 
 class PlaylistAdapter(
     private val data: MutableList<PlaylistItem>,

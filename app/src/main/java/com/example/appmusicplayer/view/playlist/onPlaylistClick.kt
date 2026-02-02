@@ -1,6 +1,6 @@
 package com.example.appmusicplayer.view.playlist
 
-import com.example.appmusicplayer.model.PlaylistEntity
+import com.example.appmusicplayer.model.playlist.PlaylistEntity
 
 interface onPlaylistClick {
     fun onCreatePlaylist()

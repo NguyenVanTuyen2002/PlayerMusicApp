@@ -6,8 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.appmusicplayer.model.AppDatabase
-import com.example.appmusicplayer.model.PlaylistEntity
-import com.example.appmusicplayer.model.PlaylistRepository
+import com.example.appmusicplayer.model.playlist.PlaylistEntity
+import com.example.appmusicplayer.model.playlist.PlaylistRepository
 import kotlinx.coroutines.launch
 
 class PlaylistViewModel : ViewModel(){

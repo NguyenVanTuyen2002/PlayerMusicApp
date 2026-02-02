@@ -1,7 +1,8 @@
-package com.example.appmusicplayer.model
+package com.example.appmusicplayer.model.playlist
 
-import android.content.Context
 import androidx.lifecycle.LiveData
+import com.example.appmusicplayer.model.playlistSong.PlaylistSongDao
+import com.example.appmusicplayer.model.playlistSong.PlaylistSongEntity
 
 class PlaylistRepository(private val playlistDao: PlaylistDao, private val playlistSongDao: PlaylistSongDao) {
 
@@ -17,14 +18,5 @@ class PlaylistRepository(private val playlistDao: PlaylistDao, private val playl
     suspend fun deletePlaylist(playlistId: Int) {
         playlistSongDao.deleteSongsByPlaylistId(playlistId)
         playlistDao.deletePlaylistById(playlistId)
-    }
-
-    // PlaylistSong
-    suspend fun insertSongToPlaylist(playlistSong: PlaylistSongEntity) {
-        playlistSongDao.insertPlaylistSong(playlistSong)
-    }
-
-    suspend fun getSongsInPlaylist(playlistId: Int): List<PlaylistSongEntity> {
-        return playlistSongDao.getSongsByPlaylistId(playlistId)
     }
 }

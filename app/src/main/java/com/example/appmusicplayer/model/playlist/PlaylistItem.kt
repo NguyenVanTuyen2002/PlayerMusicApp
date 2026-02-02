@@ -1,4 +1,4 @@
-package com.example.appmusicplayer.model
+package com.example.appmusicplayer.model.playlist
 
 sealed class PlaylistItem {
     object Create : PlaylistItem()

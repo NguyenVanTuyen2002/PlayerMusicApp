@@ -1,29 +1,40 @@
 package com.example.appmusicplayer.viewmodel
 
 import android.content.Context
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.appmusicplayer.model.AppDatabase
-import com.example.appmusicplayer.model.PlaylistEntity
-import com.example.appmusicplayer.model.PlaylistRepository
+import com.example.appmusicplayer.model.playlist.PlaylistRepository
+import com.example.appmusicplayer.model.playlistSong.PlaylistSongEntity
+import com.example.appmusicplayer.model.playlistSong.PlaylistSongRepository
 import kotlinx.coroutines.launch
 
 class PlaylistFolderViewModel : ViewModel() {
-    private lateinit var repository: PlaylistRepository
+    private lateinit var repoPlaylistSong: PlaylistSongRepository
+    private lateinit var repoPlaylist: PlaylistRepository
+
+    val songs = MutableLiveData<List<PlaylistSongEntity>>()
 
     fun init(context: Context) {
-        if (!::repository.isInitialized) {
-            val db = AppDatabase.getInstance(context.applicationContext)
-            repository = PlaylistRepository(
-                db.playlistDao(),
-                db.playlistSongDao()
-            )
-        }
+        val db = AppDatabase.getInstance(context.applicationContext)
+
+        repoPlaylistSong = PlaylistSongRepository(db.playlistSongDao())
+        repoPlaylist = PlaylistRepository(
+            db.playlistDao(),
+            db.playlistSongDao()
+        )
     }
 
     fun deletePlaylist(playlistId: Int) {
         viewModelScope.launch {
-            repository.deletePlaylist(playlistId)
+            repoPlaylist.deletePlaylist(playlistId)
+        }
+    }
+
+    fun loadSongs(playlistId: Int) {
+        viewModelScope.launch {
+            songs.postValue(repoPlaylistSong.getSongsInPlaylist(playlistId))
         }
     }
 }

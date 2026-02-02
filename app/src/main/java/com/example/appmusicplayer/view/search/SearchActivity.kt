@@ -6,8 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import com.example.appmusicplayer.databinding.ActivitySearchBinding
-import com.example.appmusicplayer.model.Music
-import com.example.appmusicplayer.model.MusicRepository
+import com.example.appmusicplayer.model.music.Music
+import com.example.appmusicplayer.model.music.MusicRepository
 import com.example.appmusicplayer.view.playerSong.PlayerSongActivity
 import com.example.appmusicplayer.viewmodel.SearchViewModel
 import com.google.gson.Gson

@@ -3,7 +3,6 @@ package com.example.appmusicplayer.view.playlistFolder
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.appmusicplayer.databinding.ActivityPlaylistMusicBinding
-import com.example.appmusicplayer.model.PlaylistRepository
 import com.example.appmusicplayer.viewmodel.PlaylistFolderViewModel
 
 class PlaylistFolderActivity : AppCompatActivity() {
@@ -27,6 +26,12 @@ class PlaylistFolderActivity : AppCompatActivity() {
         playlistId = intent.getIntExtra("playlist_id", -1)
         val playlistName = intent.getStringExtra("playlist_name")
         binding.txtPlaylistName.text = playlistName
+
+        viewModel.loadSongs(playlistId)
+
+        viewModel.songs.observe(this) {
+            adapter.updateData(it)
+        }
 
         backView()
 

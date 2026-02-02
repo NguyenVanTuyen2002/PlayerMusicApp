@@ -1,4 +1,4 @@
-package com.example.appmusicplayer.model
+package com.example.appmusicplayer.model.music
 
 data class Music(
     val id: Long,

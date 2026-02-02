@@ -4,11 +4,10 @@ import android.graphics.Color
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Looper
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.appmusicplayer.R
 import com.example.appmusicplayer.databinding.ActivityPlayerSongBinding
-import com.example.appmusicplayer.model.Music
+import com.example.appmusicplayer.model.music.Music
 import android.os.Handler
 import android.widget.SeekBar
 import com.google.gson.Gson

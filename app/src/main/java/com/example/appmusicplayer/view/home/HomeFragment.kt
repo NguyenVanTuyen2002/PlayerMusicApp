@@ -6,7 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.ViewModelProvider
-import com.example.appmusicplayer.model.Music
+import com.example.appmusicplayer.model.music.Music
 import com.example.appmusicplayer.view.playerSong.PlayerSongActivity
 import com.example.appmusicplayer.view.search.SearchActivity
 import com.example.appmusicplayer.viewmodel.HomeViewModel

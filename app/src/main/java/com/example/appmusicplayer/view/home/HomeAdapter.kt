@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.appmusicplayer.databinding.ItemMusicRecycleViewBinding
-import com.example.appmusicplayer.model.Music
+import com.example.appmusicplayer.model.music.Music
 
 class HomeAdapter(
     var data: ArrayList<Music>,

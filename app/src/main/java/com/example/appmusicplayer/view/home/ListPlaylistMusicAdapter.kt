@@ -4,10 +4,18 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.appmusicplayer.databinding.ItemPlaylistRecycleViewBinding
-import com.example.appmusicplayer.model.PlaylistEntity
+import com.example.appmusicplayer.model.playlist.PlaylistEntity
+import com.example.appmusicplayer.model.playlist.PlaylistItem
 
-class ListPlaylistMusicAdapter(var data: ArrayList<PlaylistEntity>, private val onClick: (PlaylistEntity) -> Unit
+class ListPlaylistMusicAdapter(private val data: MutableList<PlaylistEntity>,
+                               private val onClick: (PlaylistEntity) -> Unit
 ) : RecyclerView.Adapter<ListPlaylistMusicAdapter.ViewHolder>() {
+
+    fun setData(newList: List<PlaylistEntity>) {
+        data.clear()
+        data.addAll(newList)
+        notifyDataSetChanged()
+    }
 
     fun updateData(newData: ArrayList<PlaylistEntity>) {
         data.clear()

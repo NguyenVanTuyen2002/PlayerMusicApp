@@ -1,4 +1,4 @@
-package com.example.appmusicplayer.model
+package com.example.appmusicplayer.model.playlistSong
 
 import androidx.room.Dao
 import androidx.room.Insert

@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.appmusicplayer.R
 import com.example.appmusicplayer.databinding.FragmentPlaylistBinding
-import com.example.appmusicplayer.model.PlaylistEntity
+import com.example.appmusicplayer.model.playlist.PlaylistEntity
 import com.example.appmusicplayer.view.playlistFolder.PlaylistFolderActivity
 import com.example.appmusicplayer.view.search.SearchActivity
 import com.example.appmusicplayer.viewmodel.PlaylistViewModel
