@@ -1,11 +1,16 @@
 package com.example.appmusicplayer.view.playlistFolder
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.appmusicplayer.databinding.ActivityPlaylistMusicBinding
+import com.example.appmusicplayer.model.music.Music
+import com.example.appmusicplayer.model.playlistSong.PlaylistSongEntity
+import com.example.appmusicplayer.view.playerSong.PlayerSongActivity
 import com.example.appmusicplayer.viewmodel.PlaylistFolderViewModel
+import com.google.gson.Gson
 
-class PlaylistFolderActivity : AppCompatActivity() {
+class PlaylistFolderActivity : AppCompatActivity(), onClickMusicFolder {
     private lateinit var binding: ActivityPlaylistMusicBinding
     private lateinit var adapter: PlaylistFolderAdapter
     private lateinit var viewModel: PlaylistFolderViewModel
@@ -17,7 +22,7 @@ class PlaylistFolderActivity : AppCompatActivity() {
         binding = ActivityPlaylistMusicBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        adapter = PlaylistFolderAdapter(arrayListOf())
+        adapter = PlaylistFolderAdapter(arrayListOf(), this)
         binding.rvPlaylistMusic.adapter = adapter
 
         viewModel = ViewModelProvider(this)[PlaylistFolderViewModel::class.java]
@@ -49,5 +54,37 @@ class PlaylistFolderActivity : AppCompatActivity() {
             viewModel.deletePlaylist(playlistId)
             finish()
         }
+    }
+
+    override fun onClickMusic(music: PlaylistSongEntity) {
+        // 1. Lấy toàn bộ danh sách bài hát của playlist hiện tại
+        val playlistSongs = viewModel.songs.value ?: return
+
+        // 2. Convert PlaylistSongEntity -> Music
+        val musicList = ArrayList<Music>()
+        playlistSongs.forEach {
+            musicList.add(
+                Music(
+                    id = it.musicId,
+                    title = it.musicName,
+                    artist = "", // nếu chưa có thì để rỗng
+                    path = it.musicPath,
+                    duration = it.duration
+                )
+            )
+        }
+
+        // 3. Tìm index bài được click
+        val index = playlistSongs.indexOfFirst {
+            it.musicId == music.musicId
+        }
+
+        // 4. Gửi sang PlayerSongActivity
+        val gson = Gson()
+        val intent = Intent(this, PlayerSongActivity::class.java)
+        intent.putExtra("music_list_json", gson.toJson(musicList))
+        intent.putExtra("music_index", index)
+
+        startActivity(intent)
     }
 }

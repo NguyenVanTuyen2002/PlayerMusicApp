@@ -7,7 +7,8 @@ import com.example.appmusicplayer.databinding.ItemMusicRecycleViewBinding
 import com.example.appmusicplayer.model.playlist.PlaylistEntity
 import com.example.appmusicplayer.model.playlistSong.PlaylistSongEntity
 
-class PlaylistFolderAdapter(val data: ArrayList<PlaylistSongEntity>) : RecyclerView.Adapter<PlaylistFolderAdapter.ViewHolder>() {
+class PlaylistFolderAdapter(val data: ArrayList<PlaylistSongEntity>,
+    val click: onClickMusicFolder) : RecyclerView.Adapter<PlaylistFolderAdapter.ViewHolder>() {
     fun updateData(newData: List<PlaylistSongEntity>) {
         data.clear()
         data.addAll(newData)
@@ -34,9 +35,11 @@ class PlaylistFolderAdapter(val data: ArrayList<PlaylistSongEntity>) : RecyclerV
 
     inner class ViewHolder(val binding: ItemMusicRecycleViewBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bindView(song: PlaylistSongEntity) {
-            binding.txtMusicName.text = song.musicPath.substringAfterLast("/")
+            binding.txtMusicName.text = song.musicName
 
-
+            binding.itemMusic.setOnClickListener {
+                click.onClickMusic(song)
+            }
         }
     }
 }

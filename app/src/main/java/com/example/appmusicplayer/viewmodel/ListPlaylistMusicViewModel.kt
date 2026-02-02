@@ -32,12 +32,15 @@ class ListPlaylistMusicViewModel(application: Application) : AndroidViewModel(ap
 
     fun getAllPlaylists() = repoPlaylist.getPlaylist()
 
-    fun addMusicToPlaylist(playlistId: Int, musicPath: String) {
+    fun addMusicToPlaylist(playlistId: Int, musicPath: String, musicName: String, musicId: Long, duration: Long) {
         viewModelScope.launch {
             repoPlaylistSong.insertSongToPlaylist(
                 PlaylistSongEntity(
                     playlistId = playlistId,
-                    musicPath = musicPath
+                    musicPath = musicPath,
+                    musicName = musicName,
+                    musicId = musicId,
+                    duration = duration
                 )
             )
         }

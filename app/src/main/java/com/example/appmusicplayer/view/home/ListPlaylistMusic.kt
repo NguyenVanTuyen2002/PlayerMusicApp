@@ -29,7 +29,7 @@ class ListPlaylistMusic(
         )[ListPlaylistMusicViewModel::class.java]
 
         adapter = ListPlaylistMusicAdapter(mutableListOf()) { playlist ->
-            viewModel.addMusicToPlaylist(playlist.id, music.path)
+            viewModel.addMusicToPlaylist(playlist.id, music.path, music.title, music.id, music.duration)
             dismiss()
         }
 
