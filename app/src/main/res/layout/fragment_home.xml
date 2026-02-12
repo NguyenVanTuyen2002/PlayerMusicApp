@@ -59,7 +59,7 @@
             android:src="@drawable/mingcute_shuffle_fill" />
 
         <ImageView
-            android:id="@+id/btnPlayAz"
+            android:id="@+id/btnSort"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="center"

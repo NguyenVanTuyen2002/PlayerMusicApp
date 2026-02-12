@@ -5,5 +5,6 @@ data class Music(
     val title: String,
     val artist: String,
     val path: String,
-    val duration: Long
+    val duration: Long,
+    var isFavourite: Boolean = false
 )

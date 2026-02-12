@@ -1,4 +1,4 @@
-package com.example.appmusicplayer.view.home
+package com.example.appmusicplayer.view.search
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

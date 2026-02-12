@@ -4,5 +4,6 @@ import com.example.appmusicplayer.model.playlist.PlaylistEntity
 
 interface onPlaylistClick {
     fun onCreatePlaylist()
+    fun onClickFavourite()
     fun onClickPlaylist(playlist: PlaylistEntity)
 }

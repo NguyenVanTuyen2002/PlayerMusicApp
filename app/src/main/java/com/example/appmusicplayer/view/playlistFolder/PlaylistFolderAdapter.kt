@@ -3,13 +3,15 @@ package com.example.appmusicplayer.view.playlistFolder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.appmusicplayer.R
 import com.example.appmusicplayer.databinding.ItemMusicRecycleViewBinding
+import com.example.appmusicplayer.model.music.Music
 import com.example.appmusicplayer.model.playlist.PlaylistEntity
 import com.example.appmusicplayer.model.playlistSong.PlaylistSongEntity
 
-class PlaylistFolderAdapter(val data: ArrayList<PlaylistSongEntity>,
-    val click: onClickMusicFolder) : RecyclerView.Adapter<PlaylistFolderAdapter.ViewHolder>() {
-    fun updateData(newData: List<PlaylistSongEntity>) {
+class PlaylistFolderAdapter(val data: ArrayList<Music>,
+                            val click: onClickMusicFolder) : RecyclerView.Adapter<PlaylistFolderAdapter.ViewHolder>() {
+    fun updateData(newData: List<Music>) {
         data.clear()
         data.addAll(newData)
         notifyDataSetChanged()
@@ -34,11 +36,24 @@ class PlaylistFolderAdapter(val data: ArrayList<PlaylistSongEntity>,
     override fun getItemCount(): Int = data.size
 
     inner class ViewHolder(val binding: ItemMusicRecycleViewBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bindView(song: PlaylistSongEntity) {
-            binding.txtMusicName.text = song.musicName
+        fun bindView(song: Music) {
+            binding.txtMusicName.text = song.title
 
             binding.itemMusic.setOnClickListener {
                 click.onClickMusic(song)
+            }
+
+            binding.btnFavoriteMusic.setImageResource(
+                if (song.isFavourite) R.drawable.heart
+                else R.drawable.favorite
+            )
+
+            binding.btnFavoriteMusic.setOnClickListener {
+                click.onFavouriteMusic(song)
+            }
+
+            binding.btnDetailMusic.setOnClickListener {
+                click.onDetailMusic(song)
             }
         }
     }

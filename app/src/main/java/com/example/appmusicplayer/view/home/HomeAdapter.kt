@@ -4,6 +4,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.appmusicplayer.R
 import com.example.appmusicplayer.databinding.ItemMusicRecycleViewBinding
 import com.example.appmusicplayer.model.music.Music
 
@@ -49,6 +50,15 @@ class HomeAdapter(
 
             binding.btnDetailMusic.setOnClickListener {
                 listener.onDetailMusic(data)
+            }
+
+            binding.btnFavoriteMusic.setImageResource(
+                if (data.isFavourite) R.drawable.heart
+                else R.drawable.favorite
+            )
+
+            binding.btnFavoriteMusic.setOnClickListener {
+                listener.onFavoriteMusic(data)
             }
         }
     }

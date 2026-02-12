@@ -12,9 +12,13 @@ import com.example.appmusicplayer.view.search.SearchActivity
 import com.example.appmusicplayer.viewmodel.HomeViewModel
 import com.google.gson.Gson
 import android.Manifest
+import android.app.AlertDialog
+import com.example.appmusicplayer.R
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.appmusicplayer.databinding.FragmentHomeBinding
@@ -44,7 +48,7 @@ class HomeFragment : Fragment(), onClickMusicListener {
 
         requestAudioPermission()
 
-        viewModel.musicList.observe(viewLifecycleOwner) {list ->
+        viewModel.musicList.observe(viewLifecycleOwner) { list ->
             Log.d("Tuyen", "Số bài hát nhận được: ${list.size}")
 
             if (list.isEmpty()) {
@@ -61,12 +65,67 @@ class HomeFragment : Fragment(), onClickMusicListener {
             startActivity(intent)
         }
 
+        playAllMusic()
+
+        playRandomMusic()
+
+        _binding?.btnSort?.setOnClickListener {
+            showSortDialog()
+        }
+
         val audioPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             Manifest.permission.READ_MEDIA_AUDIO
         } else {
             Manifest.permission.READ_EXTERNAL_STORAGE
         }
     }
+
+    fun playAllMusic() {
+        _binding?.btnPlayMusic?.setOnClickListener {
+            val intent = Intent(requireContext(), PlayerSongActivity::class.java)
+
+            val gson = Gson()
+            val musicJson = gson.toJson(adapter.data)
+            val musicIndex = adapter.data.indexOf(adapter.data[0])
+
+            intent.putExtra("music_list_json", musicJson)
+            intent.putExtra("music_index", musicIndex)
+
+            startActivity(intent)
+        }
+    }
+
+    fun playRandomMusic() {
+        _binding?.btnPlayRandom?.setOnClickListener {
+            val intent = Intent(requireContext(), PlayerSongActivity::class.java)
+
+            val gson = Gson()
+            val musicJson = gson.toJson(adapter.data)
+            val musicIndex = (adapter.data.indices).random()
+
+            intent.putExtra("music_list_json", musicJson)
+            intent.putExtra("music_index", musicIndex)
+            intent.putExtra("is_random_mode", true)
+
+            startActivity(intent)
+        }
+    }
+
+    fun showSortDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_sort_music_home, null)
+
+        val rbName = dialogView.findViewById<RadioButton>(R.id.rbName)
+        val rbDate = dialogView.findViewById<RadioButton>(R.id.rbDate)
+        val rbSize = dialogView.findViewById<RadioButton>(R.id.rbSize)
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .setCancelable(false)
+            .create()
+
+        dialog.show()
+    }
+
 
     private fun requestAudioPermission() {
         val audioPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -124,8 +183,13 @@ class HomeFragment : Fragment(), onClickMusicListener {
     }
 
     override fun onDetailMusic(music: Music) {
-        val menuItem = MenuItemMusic(requireActivity()
-            , music)
+        val menuItem = MenuItemMusic(
+            requireActivity(), music
+        )
         menuItem.show()
+    }
+
+    override fun onFavoriteMusic(music: Music) {
+        viewModel.toggleFavourite(music)
     }
 }

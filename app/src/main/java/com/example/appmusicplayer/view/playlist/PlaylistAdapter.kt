@@ -52,7 +52,7 @@ val playlist: onPlaylistClick) : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         data.add(PlaylistItem.Create)
         data.add(PlaylistItem.Favourite)
         data.add(PlaylistItem.History)
-        playlist.forEach {
+        playlist.filter { !it.isSystem }.forEach {
             data.add(PlaylistItem.Playlist(it))
         }
         notifyDataSetChanged()
@@ -66,9 +66,11 @@ val playlist: onPlaylistClick) : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         }
     }
 
-    inner class Favourite(binding: ItemFavouritePlaylistRvBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class Favourite(val binding: ItemFavouritePlaylistRvBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bindView() {
-
+            binding.btnFavoriteMusic.setOnClickListener {
+                playlist.onClickFavourite()
+            }
         }
     }
 

@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.appmusicplayer.R
 import com.example.appmusicplayer.databinding.FragmentPlaylistBinding
 import com.example.appmusicplayer.model.playlist.PlaylistEntity
+import com.example.appmusicplayer.model.playlist.PlaylistEntity.Companion.PLAYLIST_FAVOURITE_ID
 import com.example.appmusicplayer.view.playlistFolder.PlaylistFolderActivity
 import com.example.appmusicplayer.view.search.SearchActivity
 import com.example.appmusicplayer.viewmodel.PlaylistViewModel
@@ -82,10 +83,19 @@ class PlaylistFragment : Fragment(), onPlaylistClick {
         dialog.show()
     }
 
+    override fun onClickFavourite() {
+        val intent = Intent(requireContext(), PlaylistFolderActivity::class.java)
+        intent.putExtra("playlist_id", PLAYLIST_FAVOURITE_ID)
+        intent.putExtra("playlist_name", "Favourite")
+        intent.putExtra("playlist_is_system", true)
+        startActivity(intent)
+    }
+
     override fun onClickPlaylist(playlist: PlaylistEntity) {
         val intent = Intent(requireContext(), PlaylistFolderActivity::class.java)
         intent.putExtra("playlist_id", playlist.id)
         intent.putExtra("playlist_name", playlist.name)
+        intent.putExtra("playlist_is_system", playlist.isSystem)
         startActivity(intent)
     }
 }

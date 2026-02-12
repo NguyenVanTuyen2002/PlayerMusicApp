@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.appmusicplayer.model.AppDatabase
 import com.example.appmusicplayer.model.playlist.PlaylistEntity
+import com.example.appmusicplayer.model.playlist.PlaylistItem
 import com.example.appmusicplayer.model.playlist.PlaylistRepository
 import kotlinx.coroutines.launch
 
@@ -28,6 +29,25 @@ class PlaylistViewModel : ViewModel(){
         repository.getPlaylist().observeForever {
             _playlistList.postValue(it)
         }
+    }
+
+    fun buildPlaylistItems(playlists: List<PlaylistEntity>): List<PlaylistItem> {
+        val items = mutableListOf<PlaylistItem>()
+
+        // item tạo playlist
+        items.add(PlaylistItem.Create)
+
+        // item favourite (luôn luôn có)
+        items.add(PlaylistItem.Favourite)
+
+        // playlist user tạo
+        playlists
+            .filter { !it.isSystem } // ẩn system playlist khỏi list thường
+            .forEach {
+                items.add(PlaylistItem.Playlist(it))
+            }
+
+        return items
     }
 
     fun createPlaylist(name: String) {

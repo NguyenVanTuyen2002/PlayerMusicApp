@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.appmusicplayer.databinding.ActivitySearchBinding
 import com.example.appmusicplayer.model.music.Music
 import com.example.appmusicplayer.model.music.MusicRepository
+import com.example.appmusicplayer.view.home.MenuItemMusic
 import com.example.appmusicplayer.view.playerSong.PlayerSongActivity
 import com.example.appmusicplayer.viewmodel.SearchViewModel
 import com.google.gson.Gson
@@ -27,6 +28,7 @@ class SearchActivity : AppCompatActivity(), onClickMusicSearch {
 
         viewmodel = ViewModelProvider(this)[SearchViewModel::class.java]
         val repository = MusicRepository(this)
+        viewmodel.init(this)
         viewmodel.setRepository(repository)
 
         observeData()
@@ -63,5 +65,14 @@ class SearchActivity : AppCompatActivity(), onClickMusicSearch {
         intent.putExtra("music_index", musicIndex)
 
         startActivity(intent)
+    }
+
+    override fun onFavouriteMusic(music: Music) {
+        viewmodel.toggleFavourite(music)
+    }
+
+    override fun onDetailMusic(music: Music) {
+        val menuItem = MenuItemMusic(this, music)
+        menuItem.show()
     }
 }

@@ -10,11 +10,18 @@ import com.example.appmusicplayer.databinding.ActivityPlayerSongBinding
 import com.example.appmusicplayer.model.music.Music
 import android.os.Handler
 import android.widget.SeekBar
+import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import com.example.appmusicplayer.view.home.MenuItemMusic
+import com.example.appmusicplayer.viewmodel.PlayerSongViewModel
 import com.google.gson.Gson
+import kotlinx.coroutines.launch
 
 
 class PlayerSongActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlayerSongBinding
+    private lateinit var viewModel: PlayerSongViewModel
     private var mediaPlayer: MediaPlayer? = null
     private var isPause: Boolean = true
     private var isRandom: Boolean = false
@@ -29,14 +36,25 @@ class PlayerSongActivity : AppCompatActivity() {
         binding = ActivityPlayerSongBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        viewModel = ViewModelProvider(this)[PlayerSongViewModel::class.java]
+        viewModel.init(this)
+
         backView()
 
         //nhận data từ home
         val musicJson = intent.getStringExtra("music_list_json")
         currentIndex = intent.getIntExtra("music_index", 0)
+        isRandom = intent.getBooleanExtra("is_random_mode", false)
         val gson = Gson()
         val type = object : com.google.gson.reflect.TypeToken<ArrayList<Music>>() {}.type
         musicList = gson.fromJson(musicJson, type)
+
+        // đôi màu nút random
+        if (isRandom) {
+            binding.btnPlayRandom.setColorFilter(getColor(R.color.green))
+        } else {
+            binding.btnPlayRandom.setColorFilter(Color.TRANSPARENT)
+        }
 
         //PHÁT BÀI Đc CLICK
         playMusic(currentIndex)
@@ -46,6 +64,11 @@ class PlayerSongActivity : AppCompatActivity() {
         changeRandom()
 
         touchSeekbar()
+
+
+        addPlaylist()
+
+        addFavorite()
     }
 
     fun backView() {
@@ -54,6 +77,38 @@ class PlayerSongActivity : AppCompatActivity() {
             mediaPlayer = null
             finish()
         }
+    }
+
+    fun addPlaylist() {
+        binding.btnAddPlaylist.setOnClickListener {
+            val music = musicList[currentIndex]
+            val menuItem = MenuItemMusic(this, music)
+            menuItem.show()
+        }
+    }
+
+    fun addFavorite() {
+        binding.btnFavoriteMusic.setOnClickListener {
+
+            val music = musicList[currentIndex]
+
+            lifecycleScope.launch {
+                viewModel.toggleFavourite(music)
+
+                // update luôn object hiện tại
+                music.isFavourite = !music.isFavourite
+
+                updateFavoriteIcon(music)
+            }
+        }
+    }
+
+
+    private fun updateFavoriteIcon(music: Music) {
+        binding.btnFavoriteMusic.setImageResource(
+            if (music.isFavourite) R.drawable.heart
+            else R.drawable.favorite
+        )
     }
 
     fun changeRandom() {
@@ -89,6 +144,9 @@ class PlayerSongActivity : AppCompatActivity() {
 
         val music = musicList[index]
         binding.txtSongName.text = music.title
+
+        //cập nhật màu tim
+        updateFavoriteIcon(music)
 
         mediaPlayer = MediaPlayer().apply {
             setDataSource(music.path)

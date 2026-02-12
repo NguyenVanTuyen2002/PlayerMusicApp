@@ -58,12 +58,14 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
+            android:id="@+id/btnAddPlaylist"
             android:layout_width="0dp"
             android:layout_height="24dp"
             android:layout_weight="1"
             android:src="@drawable/icon_park_outline_add" />
 
         <ImageView
+            android:id="@+id/btnFavoriteMusic"
             android:layout_width="0dp"
             android:layout_height="24dp"
             android:layout_weight="1"

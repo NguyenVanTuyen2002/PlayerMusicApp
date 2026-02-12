@@ -3,6 +3,7 @@ package com.example.appmusicplayer.view.search
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.appmusicplayer.R
 import com.example.appmusicplayer.databinding.ItemMusicRecycleViewBinding
 import com.example.appmusicplayer.model.music.Music
 
@@ -38,6 +39,19 @@ class SearchAdapter(var data: ArrayList<Music>, val search: onClickMusicSearch) 
 
             binding.itemMusic.setOnClickListener {
                 search.onClickMusic(data)
+            }
+
+            binding.btnFavoriteMusic.setImageResource(
+                if (data.isFavourite) R.drawable.heart
+                else R.drawable.favorite
+            )
+
+            binding.btnFavoriteMusic.setOnClickListener {
+                search.onFavouriteMusic(data)
+            }
+
+            binding.btnDetailMusic.setOnClickListener {
+                search.onDetailMusic(data)
             }
         }
     }

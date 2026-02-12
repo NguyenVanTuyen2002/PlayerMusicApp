@@ -1,6 +1,7 @@
 package com.example.appmusicplayer.view.playlistFolder
 
 import android.content.Intent
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.appmusicplayer.databinding.ActivityPlaylistMusicBinding
@@ -30,8 +31,16 @@ class PlaylistFolderActivity : AppCompatActivity(), onClickMusicFolder {
 
         playlistId = intent.getIntExtra("playlist_id", -1)
         val playlistName = intent.getStringExtra("playlist_name")
+        val isSystem = intent.getBooleanExtra("playlist_is_system", false)
+
         binding.txtPlaylistName.text = playlistName
 
+        // ẩn nút xóa nếu không phải là playlist favourite
+        if (isSystem) {
+            binding.btnDelete.visibility = View.GONE
+        }
+
+        // load danh sách bài hát theo playlistid
         viewModel.loadSongs(playlistId)
 
         viewModel.songs.observe(this) {
@@ -56,35 +65,24 @@ class PlaylistFolderActivity : AppCompatActivity(), onClickMusicFolder {
         }
     }
 
-    override fun onClickMusic(music: PlaylistSongEntity) {
-        // 1. Lấy toàn bộ danh sách bài hát của playlist hiện tại
-        val playlistSongs = viewModel.songs.value ?: return
+    override fun onClickMusic(music: Music) {
+        val musicList = viewModel.songs.value ?: return
+        val index = musicList.indexOf(music)
 
-        // 2. Convert PlaylistSongEntity -> Music
-        val musicList = ArrayList<Music>()
-        playlistSongs.forEach {
-            musicList.add(
-                Music(
-                    id = it.musicId,
-                    title = it.musicName,
-                    artist = "", // nếu chưa có thì để rỗng
-                    path = it.musicPath,
-                    duration = it.duration
-                )
-            )
-        }
-
-        // 3. Tìm index bài được click
-        val index = playlistSongs.indexOfFirst {
-            it.musicId == music.musicId
-        }
-
-        // 4. Gửi sang PlayerSongActivity
         val gson = Gson()
         val intent = Intent(this, PlayerSongActivity::class.java)
         intent.putExtra("music_list_json", gson.toJson(musicList))
         intent.putExtra("music_index", index)
 
         startActivity(intent)
+    }
+
+    override fun onFavouriteMusic(music: Music) {
+        viewModel.toggleFavourite(music)
+    }
+
+    override fun onDetailMusic(music: Music) {
+        val menuItem = MenuItemMusic(this, music)
+        menuItem.show()
     }
 }

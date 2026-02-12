@@ -7,53 +7,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.appmusicplayer.model.AppDatabase
 import com.example.appmusicplayer.model.music.Music
+import com.example.appmusicplayer.model.playlist.PlaylistEntity
 import com.example.appmusicplayer.model.playlist.PlaylistEntity.Companion.PLAYLIST_FAVOURITE_ID
 import com.example.appmusicplayer.model.playlist.PlaylistRepository
 import com.example.appmusicplayer.model.playlistSong.PlaylistSongEntity
-import com.example.appmusicplayer.model.playlistSong.PlaylistSongRepository
 import kotlinx.coroutines.launch
 
-class PlaylistFolderViewModel : ViewModel() {
-    private lateinit var repoPlaylistSong: PlaylistSongRepository
+class PlayerSongViewModel : ViewModel() {
     private lateinit var repoPlaylist: PlaylistRepository
-
-    val songs = MutableLiveData<List<Music>>()
 
     fun init(context: Context) {
         val db = AppDatabase.getInstance(context.applicationContext)
-
-        repoPlaylistSong = PlaylistSongRepository(db.playlistSongDao())
-        repoPlaylist = PlaylistRepository(
-            db.playlistDao(),
-            db.playlistSongDao()
-        )
+        repoPlaylist = PlaylistRepository(db.playlistDao(), db.playlistSongDao())
     }
 
-    fun deletePlaylist(playlistId: Int) {
-        viewModelScope.launch {
-            repoPlaylist.deletePlaylist(playlistId)
-        }
-    }
-
-    fun loadSongs(playlistId: Int) {
-        viewModelScope.launch {
-            val playlistSongs = repoPlaylistSong.getSongsInPlaylist(playlistId)
-            val favIds = repoPlaylistSong.getFavouriteMusicIds()
-
-            val musics = playlistSongs.map {
-                Music(
-                    id = it.musicId,
-                    title = it.musicName,
-                    artist = "",
-                    path = it.musicPath,
-                    duration = it.duration,
-                    isFavourite = favIds.contains(it.musicId)
-                )
-            }
-
-            songs.postValue(musics)
-        }
-    }
+    private val _musicList = MutableLiveData<List<Music>>()
 
     fun toggleFavourite(music: Music) = viewModelScope.launch {
         val favId = PLAYLIST_FAVOURITE_ID
@@ -76,6 +44,13 @@ class PlaylistFolderViewModel : ViewModel() {
             music.isFavourite = true
         }
 
-        songs.postValue(songs.value)
+        _musicList.postValue(_musicList.value)
+    }
+
+    suspend fun checkIsFavourite(musicId: Long): Boolean {
+        return repoPlaylist.isSongInFavourite(
+            PlaylistEntity.PLAYLIST_FAVOURITE_ID,
+            musicId
+        )
     }
 }
